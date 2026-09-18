@@ -18,7 +18,7 @@ const GID_BY_NAME = {
   "Outreach Log": "813992018",
   "Meetings & Appointments": "536630488",
   "Monthly Performance": "1036662807",
-  "Mentees Status": "1320399630",
+  "Mentees Status": "1115222476",
   "LinkedIn Connections": "2053223702"
 };
 
