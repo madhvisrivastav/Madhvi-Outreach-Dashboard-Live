@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Madhvi — Outreach Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FAF7F0;
+    --surface:#FFFFFF;
+    --ink:#1C2541;
+    --ink-2:#485172;
+    --ink-3:#7A8099;
+    --line:#E7E0D2;
+    --line-2:#EFEAE0;
+    --gold:#AD802A;
+    --gold-soft:#F3E9D2;
+    --hot:#BE4620;
+    --hot-soft:#FBE7DE;
+    --wait:#B9800B;
+    --wait-soft:#FBEED0;
+    --neutral:#6B7280;
+    --neutral-soft:#EDEEF0;
+    --cold:#33688A;
+    --cold-soft:#DFEBF1;
+    --good:#3D7A4F;
+    --good-soft:#E2F0E4;
+    --shadow: 0 1px 2px rgba(28,37,65,0.06);
+    --radius: 3px;
+  }
+  :root:not([data-theme="light"]){
+    @media (prefers-color-scheme: dark){
+      --bg:#15181F;
+      --surface:#1C2028;
+      --ink:#EDE9DF;
+      --ink-2:#C7C2B4;
+      --ink-3:#8D8A80;
+      --line:#2E3340;
+      --line-2:#262A35;
+      --gold:#D6AE5C;
+      --gold-soft:#3A311D;
+      --hot:#E38257;
+      --hot-soft:#3A241B;
+      --wait:#DDB13F;
+      --wait-soft:#3A2F16;
+      --neutral:#9AA0AC;
+      --neutral-soft:#262932;
+      --cold:#7FB2D3;
+      --cold-soft:#1E2E38;
+      --good:#7FC393;
+      --good-soft:#1C2E20;
+      --shadow: 0 1px 2px rgba(0,0,0,0.4);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#15181F;
+    --surface:#1C2028;
+    --ink:#EDE9DF;
+    --ink-2:#C7C2B4;
+    --ink-3:#8D8A80;
+    --line:#2E3340;
+    --line-2:#262A35;
+    --gold:#D6AE5C;
+    --gold-soft:#3A311D;
+    --hot:#E38257;
+    --hot-soft:#3A241B;
+    --wait:#DDB13F;
+    --wait-soft:#3A2F16;
+    --neutral:#9AA0AC;
+    --neutral-soft:#262932;
+    --cold:#7FB2D3;
+    --cold-soft:#1E2E38;
+    --good:#7FC393;
+    --good-soft:#1C2E20;
+    --shadow: 0 1px 2px rgba(0,0,0,0.4);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter',system-ui,-apple-system,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px 80px;}
+  a{color:inherit;}
+
+  /* ---------- Header ---------- */
+  header.top{border-bottom:1px solid var(--line);background:var(--surface);}
+  .header-inner{max-width:1120px;margin:0 auto;padding:28px 24px 22px;display:flex;justify-content:space-between;align-items:flex-start;gap:24px;flex-wrap:wrap;}
+  .brand{display:flex;gap:14px;align-items:flex-start;}
+  .brand-mark{
+    width:44px;height:44px;border-radius:50%;
+    background:var(--ink);color:var(--bg);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Source Serif 4',serif;font-size:20px;font-weight:600;
+    flex:none;
+  }
+  .brand h1{font-family:'Source Serif 4',serif;font-weight:600;font-size:22px;margin:0 0 2px;color:var(--ink);letter-spacing:-0.01em;}
+  .brand .role{font-size:13.5px;color:var(--ink-3);margin:0;}
+  .brand .desk{font-size:13px;color:var(--gold);margin:4px 0 0;font-weight:500;}
+
+  .snap{text-align:right;font-size:13px;color:var(--ink-3);display:flex;flex-direction:column;gap:6px;align-items:flex-end;}
+  .snap .row{display:flex;gap:6px;align-items:baseline;}
+  .snap b{color:var(--ink);font-weight:600;}
+  .refresh-btn{
+    margin-top:2px;
+    display:inline-flex;align-items:center;gap:7px;
+    background:var(--ink);color:var(--bg);
+    border:none;padding:9px 16px;border-radius:2px;
+    font-family:'Inter',sans-serif;font-size:13px;font-weight:600;
+    cursor:pointer;transition:opacity .15s ease;
+  }
+  .refresh-btn:hover{opacity:0.85;}
+  .refresh-btn svg{width:14px;height:14px;}
+  .refresh-btn.spinning svg{animation:spin 0.8s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* ---------- Tabs ---------- */
+  nav.tabs{border-bottom:1px solid var(--line);background:var(--surface);position:sticky;top:0;z-index:20;}
+  .tabs-inner{max-width:1120px;margin:0 auto;padding:0 24px;display:flex;gap:2px;overflow-x:auto;}
+  .tab-btn{
+    background:none;border:none;font-family:'Inter',sans-serif;
+    font-size:14px;font-weight:500;color:var(--ink-3);
+    padding:14px 16px 12px;cursor:pointer;white-space:nowrap;
+    border-bottom:2px solid transparent;margin-bottom:-1px;
+    transition:color .15s ease;
+  }
+  .tab-btn:hover{color:var(--ink);}
+  .tab-btn.active{color:var(--ink);border-bottom-color:var(--gold);}
+  .tab-btn .count{color:var(--ink-3);font-weight:400;font-size:12.5px;}
+  .badge-dot{
+    display:inline-flex;align-items:center;justify-content:center;
+    min-width:16px;height:16px;padding:0 4px;margin-left:6px;
+    background:var(--hot);color:#fff;border-radius:20px;
+    font-size:10.5px;font-weight:700;vertical-align:middle;
+  }
+
+  main{padding-top:32px;}
+  .panel{display:none;}
+  .panel.active{display:block;}
+
+  h2.section-title{font-family:'Source Serif 4',serif;font-size:19px;font-weight:600;margin:0 0 4px;letter-spacing:-0.01em;}
+  p.section-sub{font-size:13.5px;color:var(--ink-3);margin:0 0 22px;}
+
+  /* ---------- Stat strip ---------- */
+  .stat-strip{display:flex;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);margin-bottom:32px;overflow-x:auto;}
+  .stat{flex:1;min-width:130px;padding:18px 20px;border-right:1px solid var(--line);}
+  .stat:last-child{border-right:none;}
+  .stat .num{font-family:'Source Serif 4',serif;font-size:30px;font-weight:600;line-height:1;color:var(--ink);}
+  .stat .lbl{font-size:12.5px;color:var(--ink-3);margin-top:6px;}
+  .stat .num.hot{color:var(--hot);}
+  .stat .num.wait{color:var(--wait);}
+  .stat .num.good{color:var(--good);}
+
+  /* ---------- Two column layout for overview ---------- */
+  .grid-2{display:grid;grid-template-columns:1.3fr 1fr;gap:20px;}
+  @media (max-width:760px){.grid-2{grid-template-columns:1fr;}}
+  .card{border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);padding:22px 22px 20px;}
+  .card h3{font-family:'Source Serif 4',serif;font-size:15.5px;font-weight:600;margin:0 0 18px;}
+
+  /* bars */
+  .bar-row{display:flex;align-items:center;gap:12px;margin-bottom:12px;font-size:12.5px;}
+  .bar-row .m-label{width:56px;flex:none;color:var(--ink-3);}
+  .bar-track{flex:1;height:8px;background:var(--line-2);border-radius:2px;overflow:hidden;display:flex;}
+  .bar-fill{height:100%;background:var(--ink);border-radius:2px 0 0 2px;}
+  .bar-fill.meet{background:var(--gold);}
+  .bar-val{width:26px;text-align:right;color:var(--ink-2);font-variant-numeric:tabular-nums;}
+  .legend-mini{display:flex;gap:14px;margin-top:14px;font-size:12px;color:var(--ink-3);flex-wrap:wrap;}
+  .legend-mini span{display:inline-flex;align-items:center;gap:5px;}
+  .dot{width:8px;height:8px;border-radius:50%;display:inline-block;}
+
+  .stack-bar{display:flex;height:22px;border-radius:2px;overflow:hidden;width:100%;margin-bottom:14px;}
+  .stack-seg{height:100%;}
+  .stat-list{list-style:none;margin:0;padding:0;}
+  .stat-list li{display:flex;justify-content:space-between;font-size:13px;padding:8px 0;border-top:1px solid var(--line-2);}
+  .stat-list li:first-child{border-top:none;}
+  .stat-list .k{display:flex;align-items:center;gap:8px;color:var(--ink-2);}
+  .stat-list .v{font-variant-numeric:tabular-nums;color:var(--ink);font-weight:600;}
+
+  /* ---------- Filters ---------- */
+  .filter-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;align-items:center;}
+  .search-input{
+    flex:1;min-width:220px;
+    border:1px solid var(--line);background:var(--surface);
+    padding:9px 12px;border-radius:2px;font-size:13.5px;color:var(--ink);
+    font-family:'Inter',sans-serif;
+  }
+  .search-input:focus{outline:none;border-color:var(--ink-3);}
+  select.filter-select{
+    border:1px solid var(--line);background:var(--surface);color:var(--ink-2);
+    padding:9px 10px;border-radius:2px;font-size:13px;font-family:'Inter',sans-serif;cursor:pointer;
+  }
+  .results-count{font-size:12.5px;color:var(--ink-3);margin-bottom:14px;}
+
+  /* ---------- Company rows ---------- */
+  .co-list{border-top:1px solid var(--line);}
+  .co-row{border-bottom:1px solid var(--line);padding:16px 4px;display:flex;gap:14px;cursor:pointer;}
+  .co-row:hover{background:var(--line-2);}
+  .co-bar{width:4px;border-radius:2px;flex:none;align-self:stretch;}
+  .co-main{flex:1;min-width:0;}
+  .co-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;}
+  .co-name{font-family:'Source Serif 4',serif;font-size:16px;font-weight:600;color:var(--ink);}
+  .badges{display:flex;gap:6px;flex-wrap:wrap;align-items:center;}
+  .pill{
+    font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;
+    white-space:nowrap;letter-spacing:0.01em;
+  }
+  .co-meta{font-size:12.5px;color:var(--ink-3);margin-top:5px;}
+  .co-contact{font-size:13px;color:var(--ink-2);margin-top:8px;}
+  .co-contact b{color:var(--ink);font-weight:600;}
+  .co-detail{
+    margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);
+    font-size:13px;color:var(--ink-2);line-height:1.6;display:none;
+  }
+  .co-detail.open{display:block;}
+  .co-detail .d-row{margin-bottom:10px;}
+  .co-detail .d-row b{display:block;color:var(--ink-3);font-size:11px;text-transform:uppercase;letter-spacing:0.04em;font-weight:600;margin-bottom:3px;}
+  .expand-hint{font-size:11.5px;color:var(--ink-3);margin-top:8px;}
+
+  /* ---------- Outreach / meetings entries ---------- */
+  .entry-list{border-top:1px solid var(--line);}
+  .entry{border-bottom:1px solid var(--line);padding:16px 4px;display:flex;gap:18px;}
+  .entry .date-col{width:88px;flex:none;font-size:12.5px;color:var(--ink-3);padding-top:2px;}
+  .entry .body-col{flex:1;min-width:0;}
+  .entry-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline;}
+  .entry-co{font-weight:600;font-size:14.5px;color:var(--ink);}
+  .entry-spoc{font-size:12.5px;color:var(--ink-3);margin-top:2px;}
+  .entry-summary{font-size:13.5px;color:var(--ink-2);margin-top:8px;line-height:1.55;}
+  .entry-next{font-size:12.5px;color:var(--gold);margin-top:6px;}
+
+  /* ---------- Mentees table ---------- */
+  table.mentee-table{width:100%;border-collapse:collapse;font-size:13px;}
+  table.mentee-table th{
+    text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:0.04em;
+    color:var(--ink-3);font-weight:600;padding:0 10px 10px 4px;border-bottom:1px solid var(--line);
+  }
+  table.mentee-table td{padding:11px 10px 11px 4px;border-bottom:1px solid var(--line-2);color:var(--ink-2);}
+  table.mentee-table tr:hover td{background:var(--line-2);}
+  table.mentee-table td.name{color:var(--ink);font-weight:600;}
+
+  .empty-state{padding:60px 20px;text-align:center;color:var(--ink-3);font-size:13.5px;}
+
+  /* ---------- Toast ---------- */
+  #toast{
+    position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(20px);
+    background:var(--ink);color:var(--bg);padding:12px 20px;border-radius:3px;
+    font-size:13.5px;opacity:0;pointer-events:none;transition:all .25s ease;z-index:100;
+    box-shadow:0 6px 20px rgba(0,0,0,0.25);
+  }
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  footer{max-width:1120px;margin:40px auto 0;padding:20px 24px;border-top:1px solid var(--line);font-size:12px;color:var(--ink-3);}
+
+  ::-webkit-scrollbar{height:6px;width:6px;}
+  ::-webkit-scrollbar-thumb{background:var(--line);border-radius:3px;}
+
+  @media (max-width:600px){
+    .header-inner{flex-direction:column;}
+    .snap{align-items:flex-start;text-align:left;}
+    .co-row{flex-direction:row;}
+    .co-top{flex-direction:column;align-items:flex-start;}
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="header-inner">
+    <div class="brand">
+      <div class="brand-mark">M</div>
+      <div>
+        <h1>Jaipuria Institute of Management</h1>
+        <p class="role">Outreach intelligence</p>
+        <p class="desk">Madhvi · Individual placement desk</p>
+      </div>
+    </div>
+    <div class="snap">
+      <div class="row">Latest activity in data: <b id="snapDate">—</b></div>
+      <div class="row">Source: <b id="snapSource">Live from Google Sheets</b></div>
+      <button class="refresh-btn" id="refreshBtn" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.13-3.36L23 10M1 14l5.36 4.36A9 9 0 0020.49 15"/></svg>
+        Refresh now
+      </button>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs">
+  <div class="tabs-inner" id="tabsInner">
+    <button class="tab-btn active" data-tab="overview">Overview</button>
+    <button class="tab-btn" data-tab="followups">Follow-ups<span class="badge-dot" id="followupBadge" style="display:none;"></span></button>
+    <button class="tab-btn" data-tab="companies">All Companies <span class="count" id="countCompanies"></span></button>
+    <button class="tab-btn" data-tab="outreach">Outreach Log <span class="count" id="countOutreach"></span></button>
+    <button class="tab-btn" data-tab="meetings">Meetings <span class="count" id="countMeetings"></span></button>
+    <button class="tab-btn" data-tab="mentees">Mentees <span class="count" id="countMentees"></span></button>
+    <button class="tab-btn" data-tab="linkedin">LinkedIn Connections <span class="count" id="countLinkedin"></span></button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- OVERVIEW -->
+  <section class="panel active" id="panel-overview">
+    <h2 class="section-title">Desk overview</h2>
+    <p class="section-sub">Where outreach stands across the full company book</p>
+    <div class="stat-strip" id="statStrip"></div>
+    <div id="errorBanner" style="display:none; border:1px solid var(--hot); background:var(--hot-soft); color:var(--hot); padding:16px 18px; border-radius:3px; font-size:13.5px; margin-bottom:24px; white-space:pre-wrap; line-height:1.6;"></div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>Monthly activity</h3>
+        <div id="monthlyChart"></div>
+        <div class="legend-mini">
+          <span><i class="dot" style="background:var(--ink)"></i> Outreach touchpoints</span>
+          <span><i class="dot" style="background:var(--gold)"></i> Meetings held</span>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Company status mix</h3>
+        <div class="stack-bar" id="statusStack"></div>
+        <ul class="stat-list" id="statusList"></ul>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:20px;">
+      <div class="card">
+        <h3>Sector spread</h3>
+        <ul class="stat-list" id="sectorList"></ul>
+      </div>
+      <div class="card">
+        <h3>Relationship type</h3>
+        <div class="stack-bar" id="typeStack"></div>
+        <ul class="stat-list" id="typeList"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOLLOW-UPS -->
+  <section class="panel" id="panel-followups">
+    <h2 class="section-title">Follow-ups &amp; to-do</h2>
+    <p class="section-sub">As of <span id="todaysDate">—</span> — who to call and what's overdue</p>
+
+    <div class="card" style="border-color:var(--hot);margin-bottom:20px;">
+      <h3 style="color:var(--hot);">⚠ Overdue — no contact in 30+ days (<span id="countOverdue">0</span>)</h3>
+      <div class="entry-list" id="overdueList"></div>
+    </div>
+
+    <div class="card" style="border-color:var(--wait);margin-bottom:20px;">
+      <h3 style="color:var(--wait);">Due soon — 20–30 days since last contact (<span id="countDueSoon">0</span>)</h3>
+      <div class="entry-list" id="dueSoonList"></div>
+    </div>
+
+    <div class="card">
+      <h3 style="color:var(--gold);">Open next actions — recently contacted, action still pending (<span id="countOpenActions">0</span>)</h3>
+      <div class="entry-list" id="openActionsList"></div>
+    </div>
+  </section>
+
+  <!-- COMPANIES -->
+  <section class="panel" id="panel-companies">
+    <h2 class="section-title">All companies</h2>
+    <p class="section-sub">Full company directory — search and filter everything. Click a row to expand.</p>
+    <div class="filter-bar">
+      <input type="text" class="search-input" id="coSearch" placeholder="Search company, contact, industry, location…">
+      <select class="filter-select" id="coStatusFilter"><option value="">All statuses</option></select>
+      <select class="filter-select" id="coTypeFilter"><option value="">All types</option></select>
+      <select class="filter-select" id="coSectorFilter"><option value="">All sectors</option></select>
+      <select class="filter-select" id="coLocationFilter"><option value="">All locations</option></select>
+      <select class="filter-select" id="coRecencyFilter">
+        <option value="">All contact recency</option>
+        <option value="week">Contacted in last 7 days</option>
+        <option value="month">Contacted in last 30 days</option>
+        <option value="soon">Due soon (20–30 days)</option>
+        <option value="overdue">Overdue (30+ days)</option>
+        <option value="never">Never contacted</option>
+      </select>
+    </div>
+    <div class="results-count" id="coResultsCount"></div>
+    <div class="co-list" id="coList"></div>
+  </section>
+
+  <!-- OUTREACH -->
+  <section class="panel" id="panel-outreach">
+    <h2 class="section-title">Outreach log</h2>
+    <p class="section-sub">Every touchpoint, most recent first</p>
+    <div class="filter-bar">
+      <input type="text" class="search-input" id="outSearch" placeholder="Search company, SPOC, activity…">
+      <select class="filter-select" id="outMonthFilter"><option value="">All months</option></select>
+      <select class="filter-select" id="outActivityFilter"><option value="">All activity types</option></select>
+      <select class="filter-select" id="outResponseFilter"><option value="">All responses</option></select>
+      <select class="filter-select" id="outStageFilter"><option value="">All pipeline stages</option></select>
+    </div>
+    <div class="results-count" id="outResultsCount"></div>
+    <div class="entry-list" id="outList"></div>
+  </section>
+
+  <!-- MEETINGS -->
+  <section class="panel" id="panel-meetings">
+    <h2 class="section-title">Meetings &amp; appointments</h2>
+    <p class="section-sub">Scheduled and completed meetings</p>
+    <div class="filter-bar">
+      <input type="text" class="search-input" id="meetSearch" placeholder="Search company, SPOC, venue…">
+      <select class="filter-select" id="meetMonthFilter"><option value="">All months</option></select>
+      <select class="filter-select" id="meetStatusFilter"><option value="">All statuses</option></select>
+    </div>
+    <div class="results-count" id="meetResultsCount"></div>
+    <div class="entry-list" id="meetList"></div>
+  </section>
+
+  <!-- MENTEES -->
+  <section class="panel" id="panel-mentees">
+    <h2 class="section-title">Mentees status</h2>
+    <p class="section-sub">Placement progress for assigned mentees</p>
+    <div class="filter-bar">
+      <input type="text" class="search-input" id="menteeSearch" placeholder="Search name, roll number…">
+      <select class="filter-select" id="menteeProgramFilter"><option value="">All programs</option></select>
+      <select class="filter-select" id="menteeOfferFilter"><option value="">All offer status</option></select>
+    </div>
+    <div class="results-count" id="menteeResultsCount"></div>
+    <div style="overflow-x:auto;">
+      <table class="mentee-table" id="menteeTable"></table>
+    </div>
+  </section>
+
+  <!-- LINKEDIN -->
+  <section class="panel" id="panel-linkedin">
+    <h2 class="section-title">LinkedIn connections</h2>
+    <p class="section-sub">Network built through the outreach desk</p>
+    <div class="filter-bar">
+      <input type="text" class="search-input" id="liSearch" placeholder="Search name, company, position…">
+      <select class="filter-select" id="liMonthFilter"><option value="">All months</option></select>
+    </div>
+    <div class="results-count" id="liResultsCount"></div>
+    <div class="entry-list" id="liList"></div>
+    <div style="text-align:center;margin-top:18px;">
+      <button class="refresh-btn" id="liLoadMore" type="button" style="background:var(--surface);color:var(--ink);border:1px solid var(--line);display:none;">Load more</button>
+    </div>
+  </section>
+
+</main>
+
+<footer>Private outreach dashboard · data loaded from the workbook you provide · nothing auto-refreshes</footer>
+
+<div id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
