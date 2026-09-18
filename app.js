@@ -491,6 +491,7 @@
   }
 
   /* ---------------- mentees render ---------------- */
+  var menteeExpanded = {};
   function renderMentees(){
     var q = (document.getElementById("menteeSearch").value||"").toLowerCase();
     var fProgram = document.getElementById("menteeProgramFilter").value;
@@ -504,19 +505,47 @@
     });
     document.getElementById("countMentees").textContent = "("+state.data.mentees.records.length+")";
     document.getElementById("menteeResultsCount").textContent = "Showing " + rows.length + " of " + state.data.mentees.records.length + " mentees";
-    var tbl = document.getElementById("menteeTable");
-    if(rows.length===0){ tbl.innerHTML = '<tr><td class="empty-state">No mentees match.</td></tr>'; return; }
-    var head = '<tr><th>Name</th><th>Program</th><th>Roll No.</th><th>Companies applied</th><th>Shortlisted in</th><th>Offer received</th><th>CTC</th></tr>';
-    var body = rows.map(function(r){
+    var list = document.getElementById("menteeList");
+    if(rows.length===0){ list.innerHTML = '<div class="empty-state">No mentees match.</div>'; return; }
+    list.innerHTML = rows.map(function(r, idx){
       var offer = (r["Offer Received"]||"").trim();
-      var offerColor = /yes/i.test(offer) ? "var(--good)" : (offer ? "var(--ink-3)" : "var(--ink-3)");
-      return '<tr><td class="name">'+esc(r["Name"])+'</td>'+
-        '<td><span class="pill" style="background:var(--line-2);color:'+programColor(r["Program"])+'">'+esc(r["Program"]||"—")+'</span></td>'+
-        '<td>'+esc(r["Roll Number"]||"—")+'</td>'+
-        '<td>'+esc(r["Companies applied"]||"—")+'</td><td>'+esc(r["Shortlisted in"]||"—")+'</td>'+
-        '<td>'+(offer?('<span class="pill" style="background:var(--line-2);color:'+offerColor+'">'+esc(offer)+'</span>'):'—')+'</td><td>'+esc(r["CTC"]||"—")+'</td></tr>';
+      var offerColor = /yes/i.test(offer) ? "var(--good)" : "var(--ink-3)";
+      var open = menteeExpanded[r["Name"]] ? " open" : "";
+      var progressBits = [];
+      if(r["Companies applied"]) progressBits.push(r["Companies applied"]+" applied");
+      if(r["Shortlisted in"]) progressBits.push(r["Shortlisted in"]+" shortlisted");
+      if(r["CTC"]) progressBits.push(r["CTC"]);
+      return (
+      '<div class="co-row" data-idx="'+idx+'">'+
+        '<div class="co-bar" style="background:'+programColor(r["Program"])+'"></div>'+
+        '<div class="co-main">'+
+          '<div class="co-top">'+
+            '<div class="co-name">'+esc(r["Name"])+'</div>'+
+            '<div class="badges">'+
+              '<span class="pill" style="background:var(--line-2);color:'+programColor(r["Program"])+'">'+esc(r["Program"]||"—")+'</span>'+
+              (offer ? '<span class="pill" style="background:var(--line-2);color:'+offerColor+'">'+esc(offer)+'</span>' : '')+
+              (r["Specialistaion"] ? '<span class="pill" style="background:var(--line-2);color:var(--ink-3)">'+esc(r["Specialistaion"])+'</span>' : '')+
+            '</div>'+
+          '</div>'+
+          '<div class="co-meta">Roll no. '+esc(r["Roll Number"]||"—")+(progressBits.length?(' · '+progressBits.map(esc).join(' · ')):'')+'</div>'+
+          '<div class="co-detail'+open+'">'+
+            (r["Last meeting Date"] ? '<div class="d-row"><b>Last meeting date</b>'+esc(r["Last meeting Date"])+'</div>' : '')+
+            (r["Last conversation Details"] ? '<div class="d-row"><b>Last conversation</b>'+esc(r["Last conversation Details"])+'</div>' : '')+
+            (r["Strengths"] ? '<div class="d-row"><b>Strengths</b>'+esc(r["Strengths"])+'</div>' : '')+
+            (r["Weeknesses"] ? '<div class="d-row"><b>Areas to work on</b>'+esc(r["Weeknesses"])+'</div>' : '')+
+            (!r["Last conversation Details"] && !r["Strengths"] && !r["Weeknesses"] && !r["Last meeting Date"] ? '<div class="d-row" style="color:var(--ink-3);">No notes logged yet for this mentee.</div>' : '')+
+          '</div>'+
+          '<div class="expand-hint">'+(open?"Click to collapse":"Click to expand details")+'</div>'+
+        '</div>'+
+      '</div>');
     }).join("");
-    tbl.innerHTML = head + body;
+    list.querySelectorAll(".co-row").forEach(function(row, idx){
+      row.addEventListener("click", function(){
+        var name = rows[idx]["Name"];
+        menteeExpanded[name] = !menteeExpanded[name];
+        renderMentees();
+      });
+    });
   }
 
   /* ---------------- linkedin render ---------------- */
