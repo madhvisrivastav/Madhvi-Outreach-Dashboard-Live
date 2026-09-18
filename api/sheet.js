@@ -18,7 +18,7 @@ const GID_BY_NAME = {
   "Outreach Log": "813992018",
   "Meetings & Appointments": "536630488",
   "Monthly Performance": "1036662807",
-  "Mentees Status": "1115222476",
+  "Mentees Status": "1623916227",
   "LinkedIn Connections": "2053223702"
 };
 
@@ -54,7 +54,8 @@ module.exports = async function handler(req, res) {
     "https://docs.google.com/spreadsheets/d/" +
     SHEET_ID +
     "/gviz/tq?tqx=out:csv&gid=" +
-    gid;
+    gid +
+    "&_cb=" + Date.now();
 
   try {
     const upstream = await fetch(url, { cache: "no-store" });
