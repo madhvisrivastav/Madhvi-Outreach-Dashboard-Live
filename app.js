@@ -555,12 +555,15 @@
     if(reset!==false) liShown = liPageSize;
     var q = (document.getElementById("liSearch").value||"").toLowerCase();
     var fMonth = document.getElementById("liMonthFilter").value;
+    var fLocation = document.getElementById("liLocationFilter").value;
     var sortBy = document.getElementById("liSortFilter").value;
     var rows = (state.data.linkedin ? state.data.linkedin.records : []).slice();
     if(sortBy === "company"){
       rows.sort(function(a,b){ return (a["Company"]||"").localeCompare(b["Company"]||""); });
     } else if(sortBy === "position"){
       rows.sort(function(a,b){ return (a["Position"]||"").localeCompare(b["Position"]||""); });
+    } else if(sortBy === "location"){
+      rows.sort(function(a,b){ return (a["Location"]||"").localeCompare(b["Location"]||""); });
     } else {
       rows.sort(function(a,b){
         var da = parseDMY(a["Connected On"]), db = parseDMY(b["Connected On"]);
@@ -569,8 +572,9 @@
     }
     rows = rows.filter(function(r){
       if(fMonth && monthKey(r["Connected On"]) !== fMonth) return false;
+      if(fLocation && (r["Location"]||"").trim() !== fLocation) return false;
       if(!q) return true;
-      var hay = [r["First Name"], r["Last Name"], r["Company"], r["Position"]].join(" ").toLowerCase();
+      var hay = [r["First Name"], r["Last Name"], r["Company"], r["Position"], r["Location"]].join(" ").toLowerCase();
       return hay.indexOf(q) !== -1;
     });
     var total = state.data.linkedin ? state.data.linkedin.records.length : 0;
@@ -590,7 +594,7 @@
         '<div class="date-col"><span class="dot" style="background:'+(recent?"var(--good)":"var(--ink-3)")+';display:inline-block;margin-right:6px;"></span>'+esc(r["Connected On"]||"")+'</div>'+
         '<div class="body-col">'+
           '<div class="entry-top"><span class="entry-co">'+nameHtml+'</span></div>'+
-          '<div class="entry-spoc">'+esc(r["Position"]||"")+(r["Company"]?(' · '+esc(r["Company"])):'')+'</div>'+
+          '<div class="entry-spoc">'+esc(r["Position"]||"")+(r["Company"]?(' · '+esc(r["Company"])):'')+(r["Location"]?(' · '+esc(r["Location"])):'')+'</div>'+
         '</div>'+
       '</div>';
     }).join("");
@@ -670,6 +674,7 @@
     renderMentees();
     if(state.data.linkedin){
       populateMonthFilter("liMonthFilter", state.data.linkedin.records, "Connected On");
+      populateSelectFilter("liLocationFilter", state.data.linkedin.records, "Location", "All locations");
     }
     renderLinkedin(true);
   }
@@ -805,7 +810,7 @@
       document.getElementById(id).addEventListener("input", renderMentees);
       document.getElementById(id).addEventListener("change", renderMentees);
     });
-    ["liSearch","liMonthFilter","liSortFilter"].forEach(function(id){
+    ["liSearch","liMonthFilter","liLocationFilter","liSortFilter"].forEach(function(id){
       document.getElementById(id).addEventListener("input", function(){ renderLinkedin(true); });
       document.getElementById(id).addEventListener("change", function(){ renderLinkedin(true); });
     });
