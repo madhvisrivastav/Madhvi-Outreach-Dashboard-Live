@@ -555,11 +555,18 @@
     if(reset!==false) liShown = liPageSize;
     var q = (document.getElementById("liSearch").value||"").toLowerCase();
     var fMonth = document.getElementById("liMonthFilter").value;
+    var sortBy = document.getElementById("liSortFilter").value;
     var rows = (state.data.linkedin ? state.data.linkedin.records : []).slice();
-    rows.sort(function(a,b){
-      var da = parseDMY(a["Connected On"]), db = parseDMY(b["Connected On"]);
-      return (db?db.getTime():0) - (da?da.getTime():0);
-    });
+    if(sortBy === "company"){
+      rows.sort(function(a,b){ return (a["Company"]||"").localeCompare(b["Company"]||""); });
+    } else if(sortBy === "position"){
+      rows.sort(function(a,b){ return (a["Position"]||"").localeCompare(b["Position"]||""); });
+    } else {
+      rows.sort(function(a,b){
+        var da = parseDMY(a["Connected On"]), db = parseDMY(b["Connected On"]);
+        return (db?db.getTime():0) - (da?da.getTime():0);
+      });
+    }
     rows = rows.filter(function(r){
       if(fMonth && monthKey(r["Connected On"]) !== fMonth) return false;
       if(!q) return true;
@@ -577,10 +584,12 @@
       var d = parseDMY(r["Connected On"]);
       var recent = d && (now - d) < (1000*60*60*24*30);
       var name = ((r["First Name"]||"")+" "+(r["Last Name"]||"")).trim();
+      var url = (r["URL"]||"").trim();
+      var nameHtml = url ? '<a href="'+esc(url)+'" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:none;border-bottom:1px solid var(--gold);">'+esc(name)+'</a>' : esc(name);
       return '<div class="entry">'+
         '<div class="date-col"><span class="dot" style="background:'+(recent?"var(--good)":"var(--ink-3)")+';display:inline-block;margin-right:6px;"></span>'+esc(r["Connected On"]||"")+'</div>'+
         '<div class="body-col">'+
-          '<div class="entry-top"><span class="entry-co">'+esc(name)+'</span></div>'+
+          '<div class="entry-top"><span class="entry-co">'+nameHtml+'</span></div>'+
           '<div class="entry-spoc">'+esc(r["Position"]||"")+(r["Company"]?(' · '+esc(r["Company"])):'')+'</div>'+
         '</div>'+
       '</div>';
@@ -796,7 +805,7 @@
       document.getElementById(id).addEventListener("input", renderMentees);
       document.getElementById(id).addEventListener("change", renderMentees);
     });
-    ["liSearch","liMonthFilter"].forEach(function(id){
+    ["liSearch","liMonthFilter","liSortFilter"].forEach(function(id){
       document.getElementById(id).addEventListener("input", function(){ renderLinkedin(true); });
       document.getElementById(id).addEventListener("change", function(){ renderLinkedin(true); });
     });
