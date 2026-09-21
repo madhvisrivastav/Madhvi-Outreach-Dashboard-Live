@@ -435,6 +435,11 @@
     <div class="filter-bar">
       <input type="text" class="search-input" id="liSearch" placeholder="Search name, company, position…">
       <select class="filter-select" id="liMonthFilter"><option value="">All months</option></select>
+      <select class="filter-select" id="liSortFilter">
+        <option value="recent">Sort: Most recent</option>
+        <option value="company">Sort: Company (A-Z)</option>
+        <option value="position">Sort: Position (A-Z)</option>
+      </select>
     </div>
     <div class="results-count" id="liResultsCount"></div>
     <div class="entry-list" id="liList"></div>
@@ -445,11 +450,4 @@
 
 </main>
 
-<footer>Private outreach dashboard · data loaded from the workbook you provide · nothing auto-refreshes</footer>
-
-<div id="toast"></div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-<script src="app.js"></script>
-</body>
-</html>
+<footer>Private outreach das
